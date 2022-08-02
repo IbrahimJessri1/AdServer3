@@ -13,8 +13,8 @@ advertiser_router = APIRouter(
 
 
 @advertiser_router.get('/')
-async def get_message():
-    return {"message" : "hi"}
+async def get_all():
+    return repo_advertiser.get_all()
 
 
 
