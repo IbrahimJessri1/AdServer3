@@ -1,8 +1,9 @@
 from fastapi import APIRouter
-
+from models.advertiser import Advertiser
 
 advertiser_router = APIRouter(
-    prefix="/advertiser"
+    prefix="/advertiser",
+    tags = ['Advertiser']
 )
 
 
@@ -14,3 +15,6 @@ async def get_message():
 
 
 
+@advertiser_router.post('/signup')
+async def sign_up(advertiser: Advertiser):
+    return {"msg" : "nice"}

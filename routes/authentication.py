@@ -2,8 +2,7 @@ from fastapi import APIRouter
 
 
 authentication_router = APIRouter(
-    prefix="/",
-    tags= "Authentication"
+    tags= ['Authentication']
 )
 
 
