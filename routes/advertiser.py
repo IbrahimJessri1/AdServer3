@@ -13,7 +13,7 @@ advertiser_router = APIRouter(
 
 
 @advertiser_router.get('/')
-async def get_all():
+async def get():
     return repo_advertiser.get_all()
 
 
@@ -23,6 +23,8 @@ async def sign_up(advertiser: Advertiser):
     return repo_advertiser.signup(advertiser)
 
 
-@advertiser_router.delete('remove_all', status_code=status.HTTP_204_NO_CONTENT)
-async def remove_all():
-    return repo_advertiser.remove_all()
+
+
+@advertiser_router.delete('/remove', status_code=status.HTTP_204_NO_CONTENT)
+async def remove(constraints : dict):
+    return repo_advertiser.remove(constraints)
