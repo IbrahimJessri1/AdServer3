@@ -21,3 +21,8 @@ async def get_all():
 @advertiser_router.post('/signup', status_code=status.HTTP_201_CREATED)
 async def sign_up(advertiser: Advertiser):
     return repo_advertiser.signup(advertiser)
+
+
+@advertiser_router.delete('remove_all', status_code=status.HTTP_204_NO_CONTENT)
+async def remove_all():
+    return repo_advertiser.remove_all()
