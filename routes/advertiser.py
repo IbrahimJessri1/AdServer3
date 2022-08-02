@@ -1,5 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, status
 from models.advertiser import Advertiser
+from repositries import advertiser as repo_advertiser
+
+
 
 advertiser_router = APIRouter(
     prefix="/advertiser",
@@ -15,6 +18,6 @@ async def get_message():
 
 
 
-@advertiser_router.post('/signup')
+@advertiser_router.post('/signup', status_code=status.HTTP_201_CREATED)
 async def sign_up(advertiser: Advertiser):
-    return {"msg" : "nice"}
+    return repo_advertiser.signup(advertiser)
