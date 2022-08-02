@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 
 advertiser_router = APIRouter(
-
+    prefix="/advertiser"
 )
 
 
