@@ -1,8 +1,8 @@
 from fastapi import APIRouter, status
 from models.advertiser import Advertiser
 from repositries import advertiser as repo_advertiser
-
-
+from repositries import generics as gen
+from config.db import conn
 
 advertiser_router = APIRouter(
     prefix="/advertiser",
@@ -27,4 +27,4 @@ async def sign_up(advertiser: Advertiser):
 
 @advertiser_router.delete('/remove', status_code=status.HTTP_204_NO_CONTENT)
 async def remove(constraints : dict):
-    return repo_advertiser.remove(constraints)
+    return gen.remove(conn.AdServer.advertiser, constraints)
