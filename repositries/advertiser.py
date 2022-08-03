@@ -1,4 +1,4 @@
-from models.advertiser import Advertiser, AdvertiserShow, Membership
+from models.users import Advertiser, AdvertiserShow, Membership
 from fastapi import HTTPException, status
 from config.db import conn
 from repositries import generics as gen

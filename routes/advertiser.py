@@ -1,5 +1,5 @@
 from fastapi import APIRouter, status
-from models.advertiser import Advertiser
+from models.users import Advertiser
 from repositries import advertiser as repo_advertiser
 from repositries import generics as gen
 from config.db import conn

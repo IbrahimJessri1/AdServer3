@@ -9,17 +9,22 @@ class Membership(str, Enum):
     VIP = "VIP" #0.45
 
 
-class Advertiser(BaseModel):
+
+class User(BaseModel):
     username: str
     password:str
+
+class Admin(User):
+    pass
+
+
+class Advertiser(User):
     membership:Membership
 
 
 class AdvertiserShow(BaseModel):
     username: str
     membership: Membership
-    def Print(self):
-        print(self.username, self.membership)
 
 
 
