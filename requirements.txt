@@ -4,3 +4,4 @@ pydantic
 bcrypt
 python-jose
 pymongo
+passlib

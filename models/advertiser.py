@@ -1,3 +1,4 @@
+from msilib.schema import AdvtExecuteSequence
 from pydantic import BaseModel
 from enum import Enum
 
@@ -12,4 +13,15 @@ class Advertiser(BaseModel):
     username: str
     password:str
     membership:Membership
+
+
+class AdvertiserShow(BaseModel):
+    username: str
+    membership: Membership
+    def Print(self):
+        print(self.username, self.membership)
+
+
+
+
 
