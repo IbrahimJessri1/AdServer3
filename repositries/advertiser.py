@@ -24,7 +24,18 @@ def signup(advertiser : Advertiser):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An Error Happaned, try again later") 
 
 def get_all():
-    return gen.get(conn.AdServer.user, {})
+    return gen.get_many(conn.AdServer.user, {})
+
+
+def update_membership(membership, current_username):
+    try:
+        query = { "username": current_username}
+        new_values = { "$set": { "membership": membership.value } }
+        return gen.update_one(conn.AdServer.user, query, new_values)
+    except HTTPException as http_excep:
+        raise http_excep    
+    except:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An Error Happaned, try again later") 
 
 
 
