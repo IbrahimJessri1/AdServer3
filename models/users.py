@@ -1,4 +1,4 @@
-from msilib.schema import AdvtExecuteSequence
+from typing import List
 from pydantic import BaseModel
 from enum import Enum
 
@@ -9,10 +9,20 @@ class Membership(str, Enum):
     VIP = "VIP" #0.45
 
 
+class Role(str, Enum):
+    ADVERTISER = "advertiser"
+    ADMIN = "admin"
 
 class User(BaseModel):
     username: str
     password:str
+    role: Role
+
+
+class UserShow(BaseModel):
+    username: str
+    role : Role
+
 
 class Admin(User):
     pass
@@ -24,8 +34,8 @@ class Advertiser(User):
 
 class AdvertiserShow(BaseModel):
     username: str
+    role : Role
     membership: Membership
-
 
 
 
