@@ -17,12 +17,13 @@ class User(BaseModel):
     username: str
     password:str
     role: Role
+    create_date: str
 
 
 class UserShow(BaseModel):
     username: str
     role : Role
-
+    create_date:str
 
 class Admin(User):
     pass
