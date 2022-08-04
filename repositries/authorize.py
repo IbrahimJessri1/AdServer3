@@ -1,5 +1,5 @@
 from config.db import conn
-import generics as gen
+from . import generics as gen
 from fastapi import HTTPException, status
 
 class Authorize:

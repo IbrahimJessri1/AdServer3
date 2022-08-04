@@ -16,11 +16,12 @@ async def get(current_username : str = Depends(oauth2.get_current_user)):
     return repo_advertiser.get_all()
 
 
+
 @advertiser_router.post('/signup', status_code=status.HTTP_201_CREATED)
 async def sign_up(advertiser: Advertiser):
     return repo_advertiser.signup(advertiser)
 
 
 @advertiser_router.delete('/remove', status_code=status.HTTP_204_NO_CONTENT)
-async def remove(constraints : dict):
+async def remove(constraints : dict, current_username : str = Depends(oauth2.get_current_user)):
     return gen.remove(conn.AdServer.advertiser, constraints)

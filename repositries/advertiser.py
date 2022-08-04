@@ -1,4 +1,4 @@
-from models.users import Advertiser, AdvertiserShow, Membership
+from models.users import Advertiser, AdvertiserShow, Role
 from fastapi import HTTPException, status
 from config.db import conn
 from repositries import generics as gen
@@ -13,7 +13,9 @@ def signup(advertiser : Advertiser):
         if user:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="username taken!")
         advertiser.password = Hash.bcrypt(advertiser.password)
-        collection.insert_one(dict(advertiser))
+        user = dict(advertiser)
+        user["role"] = Role.ADVERTISER.value
+        collection.insert_one(user)
         inserted = gen.get_one(collection, {"username" : advertiser.username})
         return AdvertiserShow(username = inserted["username"], role = inserted["role"], membership = inserted["membership"])
     except HTTPException as http_excep:

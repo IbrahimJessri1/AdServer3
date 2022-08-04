@@ -28,7 +28,9 @@ class Admin(User):
     pass
 
 
-class Advertiser(User):
+class Advertiser(BaseModel):
+    username: str
+    password:str
     membership:Membership
 
 
