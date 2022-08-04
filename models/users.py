@@ -37,9 +37,8 @@ class Advertiser(BaseModel):
 
 class AdvertiserShow(BaseModel):
     username: str
-    role : Role
     membership: Membership
-
-
+    create_date:str
+    role:Role
 
 
