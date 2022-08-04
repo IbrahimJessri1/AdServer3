@@ -31,10 +31,10 @@ async def get(current_username : TokenData = Depends(oauth2.get_current_user)):
     return repo_advertiser.get(current_username.username)
 
 
-@advertiser_router.delete('/')
+@advertiser_router.delete('/', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_account(current_username : TokenData = Depends(oauth2.get_current_user)):
     #Authorize.auth("self_delete_advertiser", current_username.username)
-    return gen.remove(conn.AdServer.user, {"username" : current_username.username})
+    repo_advertiser.delete_account(current_username.username)
 
 
 
@@ -50,4 +50,5 @@ async def get(current_username : TokenData = Depends(oauth2.get_current_user)):
 
 @advertiser_router.delete('/remove', status_code=status.HTTP_204_NO_CONTENT)
 async def remove(constraints : dict, current_username : str = Depends(oauth2.get_current_user)):
-    return gen.remove(conn.AdServer.user, constraints)
+    #Authorize.auth("delete_advertiser", current_username.username)
+    repo_advertiser.remove(constraints)

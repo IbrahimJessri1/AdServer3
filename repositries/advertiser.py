@@ -50,6 +50,9 @@ def get(username):
     except:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An Error Happaned, try again later")   
 
+def delete_account(username):
+    gen.remove(conn.AdServer.user, {"username" : username})
 
 
-
+def remove(constraints):
+    gen.remove(conn.AdServer.user, constraints)
