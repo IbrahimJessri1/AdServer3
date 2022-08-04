@@ -27,11 +27,12 @@ def get_all():
     return gen.get_many(conn.AdServer.user, {})
 
 
-def update_membership(membership, current_username):
+def update_membership(membership, username):
     try:
-        query = { "username": current_username}
+        query = { "username": username}
         new_values = { "$set": { "membership": membership.value } }
-        return gen.update_one(conn.AdServer.user, query, new_values)
+        res = gen.update_one(conn.AdServer.user, query, new_values)
+        return AdvertiserShow(username=res["username"], role=res["role"], membership = res["membership"])
     except HTTPException as http_excep:
         raise http_excep    
     except:
@@ -39,6 +40,14 @@ def update_membership(membership, current_username):
 
 
 
+def get(username):
+    try:
+        res = gen.get_one(conn.AdServer.user, {"username" : username})
+        return AdvertiserShow(username=res["username"], role=res["role"], membership = res["membership"])
+    except HTTPException as http_excep:
+        raise http_excep    
+    except:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An Error Happaned, try again later")   
 
 
 
