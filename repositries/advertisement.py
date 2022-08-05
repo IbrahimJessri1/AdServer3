@@ -7,6 +7,10 @@ from repositries import generics as gen
 from models.advertisement import AdInfo, Advertisement
 import datetime
 from .utilites import get_dict
+import requests
+import os
+
+
 
 def create_ad(ad_input, advertiser_username):
     try:
@@ -19,6 +23,19 @@ def create_ad(ad_input, advertiser_username):
             ad_info= ad_info,
             categories=ad_input.categories
         )
+        if ad_input.type.value == 'text':
+            filename = str(advertisement.id) + '.txt'
+            dir = 'advertisements/' + advertiser_username
+            download_file(advertisement.ad_info.url, dir, filename)
+        if ad_input.type.value == 'image':
+            filename = str(advertisement.id) + '.jpg'
+            dir = 'advertisements/' + advertiser_username
+            download_file(advertisement.ad_info.url, dir, filename)
+        if ad_input.type.value == 'video':
+            filename = str(advertisement.id) + '.mp4'
+            dir = 'advertisements/' + advertiser_username
+            download_file(advertisement.ad_info.url, dir, filename)
+
         d = get_dict(advertisement)
         conn.AdServer.advertisement.insert_one(dict(d))
     except:
@@ -31,3 +48,8 @@ def get_all():
 
 
 
+def download_file(URL, dir, filename):
+    os.makedirs(dir, exist_ok=True) 
+    path = dir + "/" + filename
+    response = requests.get(URL)
+    open(path, "wb").write(response.content)

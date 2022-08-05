@@ -16,7 +16,7 @@ advertisement_router = APIRouter(
 
 
 
-@advertisement_router.post('/create_ad',  status_code=status.HTTP_204_NO_CONTENT)
+@advertisement_router.post('/create_ad',)#  status_code=status.HTTP_204_NO_CONTENT)
 async def create_ad(ad_input:AdvertisementInput, current_username : TokenData = Depends(oauth2.get_current_user)):
     #authorize  
     if not Validator.validate(ad_input):
