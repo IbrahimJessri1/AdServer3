@@ -44,7 +44,7 @@ class AdType(str, Enum):
 class AdInfo(BaseModel):
     type : AdType
     advertiser_username: str
-
+    path: str
 
 class Category(str, Enum):
     TECHNOLOGY= "technology"
@@ -65,6 +65,5 @@ class Advertisement(BaseModel):
     marketing_info: MarketingInfo
     ad_info: AdInfo
     categories: List[Category]
-
 
 
