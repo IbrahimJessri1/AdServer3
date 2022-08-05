@@ -12,8 +12,6 @@ admin_permission = ["get_advertiser", "create_advertiser", "delete_advertiser"]
 }
 
 
-
-
 print({"admin_permissions" : admin_permission})
 
 

@@ -1,7 +1,8 @@
 from sre_parse import CATEGORIES
-from pydantic import BaseModel
+from uuid import UUID, uuid4
+from pydantic import UUID4, BaseModel
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 class TargetAge(str, Enum):
     ALL_AGES= "all ages"
@@ -41,8 +42,6 @@ class AdType(str, Enum):
 
 
 class AdInfo(BaseModel):
-    filename: str
-    path : str
     type : AdType
     advertiser_username: str
 
@@ -60,7 +59,8 @@ class AdvertisementInput(BaseModel):
 
 
 class Advertisement(BaseModel):
-    id:int
+    id:Optional[UUID] = uuid4()
+    create_date: str
     target_user_info: TargetUserInfo
     marketing_info: MarketingInfo
     ad_info: AdInfo
