@@ -46,6 +46,13 @@ def create_ad(ad_input, advertiser_username):
 def get_all():
     return gen.get_many(conn.AdServer.advertisement, {})
 
+def get_my_ads(username):
+    return gen.get_many(conn.AdServer.advertisement, {"ad_info.advertiser_username" : username})
+
+
+def remove(constraints):
+    gen.remove(conn.AdServer.advertisement, constraints)
+    
 
 
 def download_file(URL, dir, filename):

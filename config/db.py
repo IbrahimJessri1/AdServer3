@@ -8,58 +8,17 @@ from enum import Enum
 conn = MongoClient("mongodb://localhost:27017/AdServer")
 
 
-# admin_permission = ["get_advertiser", "create_advertiser", "delete_advertiser"]
+admin_permission = ["self_update_user", "update_advertisement", "delete_advertisement", "get_advertisement","delete_user","self_delete_user", "self_get_user", "get_user"]
 
-# {
-#     "role" : "admin",
-#     "permissions" : ["get_advertiser", "create_advertiser", "delete_advertiser"]
-# }
-
-
-# print({"admin_permissions" : admin_permission})
+{
+    "role" : "admin",
+    "permissions" :admin_permission
+}
 
 
-# def get_dict(obj):
-#     res = {}
-#     for att in dir(obj):
-#         if att.startswith('__'):
-#             continue
-#         value = getattr(obj, att)
-#         if type(value).__name__ == 'int':
-#             res[att] = str(value)
-#         elif type(value).__name__ == 'float':
-#             res[att] = str(value)
-#         elif type(value).__name__ == 'list':
-#             res[att] = value
-#         elif type(value).__name__ == 'str':
-#             res[att] = value
-#         else:
-#             res[att] = get_dict(value)
-#     return res
+advertiser_permission = ["self_update_user", "self_delete_user", "self_get_user", "create_ad", "self_delete_ad", "self_update_ad", "self_get_ad", "self_update_account_adv", "self_get_adv"]
 
-
-# class c(str, Enum):
-#     NAME= "name"
-
-# print(type(c).__name__)
-
-
-# class c:
-#     name = 'hi'
-
-# print(dir(c))
-
-# ob = c()
-
-# print(get_dict(c))
-
-# ob = c()
-# print(getattr(ob, 'name'))
-
-
-
-# # print(dir(ob))
-# d = 1
-# print(type(d).__name__)
-
-
+{
+    "role" : "advertiser",
+    "permissions" :advertiser_permission
+}

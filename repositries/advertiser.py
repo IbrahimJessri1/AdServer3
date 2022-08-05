@@ -24,14 +24,18 @@ def signup(advertiser : Advertiser):
     except:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An Error Happaned, try again later") 
 
-def get_all():
-    return gen.get_many(conn.AdServer.user, {})
 
 
-def update_membership(membership, username):
+
+def update_adv_account(advertiser_update, username):
     try:
         query = { "username": username}
-        new_values = { "$set": { "membership": membership.value } }
+        in_values = {}
+        if advertiser_update.membership is not None:
+            in_values["membership"] = advertiser_update.membership.value
+        if advertiser_update.password is not None:
+            in_values["password"] = Hash.bcrypt(advertiser_update.password)
+        new_values = { "$set": in_values }
         res = gen.update_one(conn.AdServer.user, query, new_values)
         return AdvertiserShow(username=res["username"], role=res["role"], membership = res["membership"], create_date=res["create_date"])
     except HTTPException as http_excep:
@@ -50,9 +54,6 @@ def get(username):
     except:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An Error Happaned, try again later")   
 
-def delete_account(username):
-    gen.remove(conn.AdServer.user, {"username" : username})
 
 
-def remove(constraints):
-    gen.remove(conn.AdServer.user, constraints)
+
