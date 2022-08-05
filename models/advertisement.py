@@ -3,6 +3,8 @@ from uuid import UUID, uuid4
 from pydantic import UUID4, BaseModel
 from enum import Enum
 from typing import List, Optional
+from fastapi import UploadFile
+
 
 class TargetAge(str, Enum):
     ALL_AGES= "all ages"
@@ -17,9 +19,9 @@ class Language(str, Enum):
 
 
 class TargetGender(str, Enum):
+    BOTH="both"
     MALE= "male"
     FEMALE= "female"
-    BOTH="both"
 
 
 class TargetUserInfo(BaseModel):
@@ -36,7 +38,7 @@ class MarketingInfo(BaseModel):
 
 class AdType(str, Enum):
     TEXT= "text"
-    PHOTO= "photo"
+    PHOTO= "image"
     VIDEO= "video"
     INTERACTIVE= "interactive"
 
@@ -44,7 +46,7 @@ class AdType(str, Enum):
 class AdInfo(BaseModel):
     type : AdType
     advertiser_username: str
-    path: str
+    url: str
 
 class Category(str, Enum):
     TECHNOLOGY= "technology"
@@ -56,7 +58,7 @@ class AdvertisementInput(BaseModel):
     marketing_info: MarketingInfo
     type: AdType
     categories: List[Category]
-
+    url:str
 
 class Advertisement(BaseModel):
     id:Optional[UUID] = uuid4()
@@ -65,5 +67,4 @@ class Advertisement(BaseModel):
     marketing_info: MarketingInfo
     ad_info: AdInfo
     categories: List[Category]
-
 
