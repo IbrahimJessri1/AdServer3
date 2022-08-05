@@ -8,7 +8,6 @@ from enum import Enum
 conn = MongoClient("mongodb://localhost:27017/AdServer")
 
 
-
 # admin_permission = ["get_advertiser", "create_advertiser", "delete_advertiser"]
 
 # {
