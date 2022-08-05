@@ -34,7 +34,6 @@ class TargetUserInfo(BaseModel):
 
 class MarketingInfo(BaseModel):
     max_cpc : float
-    min_cpc : float
 
 class AdType(str, Enum):
     TEXT= "text"
