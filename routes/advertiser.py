@@ -20,7 +20,7 @@ async def sign_up(advertiser: Advertiser):
 
 @advertiser_router.put('/account')
 async def update_account(advertiser_update : AdvertiserUpdate, current_username : TokenData = Depends(oauth2.get_current_user)):
-    #Authorize.auth("self_update_account_adv", current_username)
+    Authorize.auth("self_update_account_adv", current_username.username)
     return repo_advertiser.update_adv_account(advertiser_update, current_username.username)
 
 
@@ -28,8 +28,8 @@ async def update_account(advertiser_update : AdvertiserUpdate, current_username 
 
 
 @advertiser_router.get('/')
-async def get(current_username : TokenData = Depends(oauth2.get_current_user)):
-    #Authorize.auth("self_get_adv", current_username.username)
+async def my_account(current_username : TokenData = Depends(oauth2.get_current_user)):
+    Authorize.auth("self_get_adv", current_username.username)
     return repo_advertiser.get(current_username.username)
 
 
