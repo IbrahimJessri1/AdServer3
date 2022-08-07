@@ -13,7 +13,7 @@ def get_dict(obj):
             continue
         value = getattr(obj, att)
         if type(value).__name__ == 'int':
-            res[att] = str(value)
+            res[att] = value
         elif type(value).__name__ == 'float':
             res[att] = value
         elif type(value).__name__ == 'list':

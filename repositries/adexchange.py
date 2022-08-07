@@ -13,7 +13,7 @@ from .utilites import probability_get
 def negotiate(request : Ad_Request):
     ad_collection = conn.AdServer.advertisement
     adv_collection = conn.AdServer.user
-    all_ads = gen.get_many(ad_collection,{"marketing_info.max_cpc" : {"$gte" : request.min_cpc}})
+    all_ads = gen.get_many(ad_collection,{"marketing_info.max_cpc" : {"$gt" : request.min_cpc}})
     all_ads_advertisers = []
     for ad in all_ads:
         all_ads_advertisers.append(gen.get_one(adv_collection, {"username" : ad["ad_info"]["advertiser_username"]}))
@@ -41,9 +41,7 @@ def negotiate(request : Ad_Request):
 
     if len(param) == 0:
         return {"cpc" : 0, "id" : '-1'}
-    
     ad_membership = probability_get(param)
-    print(ad_membership)
     ad_list = []
     if ad_membership == Membership.NORMAL.value:
         ad_list = normal_ads
@@ -57,7 +55,8 @@ def negotiate(request : Ad_Request):
     total_times_served = 0
     for ad in ad_list:
         total_times_served += ad["marketing_info"]["times_served"]
-    
+    times_served_weight = 0.1
+    ctr_weight = 0.15
     for i in range(len(ad_list)):
         ad = ad_list[i]
         weight_gained = 0
@@ -108,11 +107,19 @@ def negotiate(request : Ad_Request):
         final_weight = 0
         if total_weight != 0:
             final_weight = weight_gained / total_weight
+        if total_times_served != 0:
+            final_weight -= (int(ad["marketing_info"]["times_served"]) / total_times_served) * times_served_weight
+        ctr = 0
+        if ad["marketing_info"]["impressions"] != 0:
+            ctr = ad["marketing_info"]["clicks"] / ad["marketing_info"]["impressions"]
+        final_weight += ctr * ctr_weight
+
+        
+
         final_ad_list.append((i, final_weight))
+
+    final_ad_list.sort(key= lambda x : x[1], reverse= True)
 
 
     return final_ad_list
-    return {"membership": ad_membership, "list": final_ad_list}
-
-    return {"normal": normal_ads, "premium": premium_ads, "vip": vip_ads}
-    return 'hi'
+    
