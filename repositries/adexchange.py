@@ -57,7 +57,7 @@ def negotiate(request : Ad_Request):
     total_times_served = 0
     for ad in ad_list:
         total_times_served += ad["marketing_info"]["times_served"]
-
+    
     for i in range(len(ad_list)):
         ad = ad_list[i]
         weight_gained = 0
