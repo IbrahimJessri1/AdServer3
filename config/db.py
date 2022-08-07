@@ -1,17 +1,10 @@
 
-import datetime
-from uuid import uuid4
-import bcrypt
 from pymongo import MongoClient
-from enum import Enum
-
-from requests import delete
-from models.users import User
-from repositries import hashing
-
 conn = MongoClient("mongodb://localhost:27017/AdServer")
 
 collection = conn.AdServer.role_permission
+
+
 
 admin_permission = ["self_update_user", "update_advertisement", "delete_advertisement", "get_advertisement","delete_user","self_delete_user", "self_get_user", "get_user"]
 

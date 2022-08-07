@@ -1,10 +1,11 @@
+from pydoc import cli
 import shutil
 from tempfile import gettempdir
 from uuid import uuid4
 from fastapi import HTTPException, status
 from config.db import conn
 from repositries import generics as gen
-from models.advertisement import AdInfo, Advertisement
+from models.advertisement import AdInfo, Advertisement, MarketingInfo
 import datetime
 from .utilites import get_dict
 import requests
@@ -19,7 +20,7 @@ def create_ad(ad_input, advertiser_username):
         advertisement = Advertisement(
             create_date = create_date,
             target_user_info=ad_input.target_user_info, 
-            marketing_info=ad_input.marketing_info,
+            marketing_info=MarketingInfo(max_cpc= ad_input.max_cpc,impressions= 0,clicks= 0),
             ad_info= ad_info,
             categories=ad_input.categories
         )
@@ -35,7 +36,6 @@ def create_ad(ad_input, advertiser_username):
             filename = str(advertisement.id) + '.mp4'
             dir = 'advertisements/' + advertiser_username
             download_file(advertisement.ad_info.url, dir, filename)
-
         d = get_dict(advertisement)
         conn.AdServer.advertisement.insert_one(dict(d))
     except:

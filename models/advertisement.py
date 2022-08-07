@@ -14,6 +14,7 @@ class TargetAge(str, Enum):
     OLD = "old people"
 
 class Language(str, Enum):
+    ANY = "any"
     EN = "en"
     AR = "ar"
 
@@ -34,6 +35,8 @@ class TargetUserInfo(BaseModel):
 
 class MarketingInfo(BaseModel):
     max_cpc : float
+    impressions : int
+    clicks: int
 
 class AdType(str, Enum):
     TEXT= "text"
@@ -48,13 +51,14 @@ class AdInfo(BaseModel):
     url: str
 
 class Category(str, Enum):
+    ANY= "any"
     TECHNOLOGY= "technology"
 
 
 
 class AdvertisementInput(BaseModel):
     target_user_info: TargetUserInfo
-    marketing_info: MarketingInfo
+    max_cpc: float
     type: AdType
     categories: List[Category]
     url:str
@@ -66,4 +70,3 @@ class Advertisement(BaseModel):
     marketing_info: MarketingInfo
     ad_info: AdInfo
     categories: List[Category]
-
