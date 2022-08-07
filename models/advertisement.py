@@ -9,7 +9,7 @@ from fastapi import UploadFile
 class TargetAge(str, Enum):
     ALL_AGES= "all ages"
     KID= "kids"
-    TEEN= "teens"
+    YOUTH= "youths"
     ADULT = "adults"
     OLD = "old people"
 
@@ -37,6 +37,8 @@ class MarketingInfo(BaseModel):
     max_cpc : float
     impressions : int
     clicks: int
+    times_served: int
+    raise_percentage: float
 
 class AdType(str, Enum):
     TEXT= "text"
@@ -62,6 +64,7 @@ class AdvertisementInput(BaseModel):
     type: AdType
     categories: List[Category]
     url:str
+    raise_percentage: float
 
 class Advertisement(BaseModel):
     id:Optional[UUID] = uuid4()

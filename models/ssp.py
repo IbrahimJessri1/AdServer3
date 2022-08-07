@@ -1,3 +1,4 @@
+from unicodedata import category
 from pydantic import BaseModel
 from enum import Enum
 from typing import Optional, List
@@ -7,11 +8,7 @@ class Gender(str, Enum):
     MALE= "male"
     FELMALE= "female"
 
-class Age(str, Enum):
-    KID= "kids"
-    TEEN= "teens"
-    ADULT = "adults"
-    OLD = "old people"
+
 
 
 class Language(str, Enum):
@@ -22,7 +19,7 @@ class Language(str, Enum):
 class UserInfo(BaseModel):
     location: Optional[str] = None
     gender: Optional[Gender] = None
-    age: Optional[Age] = None
+    age: Optional[int] = None
     language: Optional[Language] = None
 
     
@@ -30,7 +27,7 @@ class Category(str, Enum):
     TECHNOLOGY= "technology"
 
 class Categories(BaseModel):
-    categories_list: Optional[List[Category]] = None
+    categories_list: List[Category]
 
 
 class Ad_Request(BaseModel):

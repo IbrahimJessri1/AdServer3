@@ -20,7 +20,7 @@ def create_ad(ad_input, advertiser_username):
         advertisement = Advertisement(
             create_date = create_date,
             target_user_info=ad_input.target_user_info, 
-            marketing_info=MarketingInfo(max_cpc= ad_input.max_cpc,impressions= 0,clicks= 0),
+            marketing_info=MarketingInfo(max_cpc= ad_input.max_cpc,impressions= 0,clicks= 0, times_served=0, raise_percentage=ad_input.raise_percentage),
             ad_info= ad_info,
             categories=ad_input.categories
         )

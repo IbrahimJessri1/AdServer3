@@ -3,6 +3,9 @@ from models.advertisement import Advertisement, Category, MarketingInfo
 from pydantic import BaseModel
 from enum import Enum
 from uuid import UUID
+import random
+
+
 def get_dict(obj):
     res = {}
     for att in dir(obj):
@@ -24,3 +27,17 @@ def get_dict(obj):
         else:
             res[att] = get_dict(value)
     return res
+
+
+
+def probability_get(param):
+    sum = 0
+    for t in param:
+        sum += t[1]
+    param.sort(key= lambda x : x[1])
+    val = random.uniform(0, sum)
+    yet = 0
+    for t in param:
+        yet += t[1]
+        if yet >= val:
+            return t[0]

@@ -1,3 +1,4 @@
+from re import M
 from typing import List
 from pydantic import BaseModel
 from enum import Enum
@@ -7,6 +8,12 @@ class Membership(str, Enum):
     NORMAL = "NORMAL" #0.2
     PREMIUM = "PREMIUM" #0.35
     VIP = "VIP" #0.45
+
+
+class MembershipProbabilities(str, Enum):
+    NORMAL = 0.2
+    PREMIUM = 0.35
+    VIP = 0.45
 
 
 class Role(str, Enum):
