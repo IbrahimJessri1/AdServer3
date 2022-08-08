@@ -41,3 +41,6 @@ def probability_get(param):
         yet += t[1]
         if yet >= val:
             return t[0]
+
+def rand(start, end, decimal_places):
+    return  round(random.uniform(start, end), decimal_places)

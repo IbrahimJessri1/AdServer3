@@ -6,8 +6,7 @@ from repositries import generics as gen
 from models.ssp import Ad_Request
 from models.users import Membership, MembershipProbabilities
 from models.advertisement import Language, TargetAge
-from .utilites import probability_get
-
+from .utilites import probability_get, rand
 
 
 def negotiate(request : Ad_Request):
@@ -53,10 +52,28 @@ def negotiate(request : Ad_Request):
     final_ad_list = []
     
     total_times_served = 0
-    for ad in ad_list:
-        total_times_served += ad["marketing_info"]["impressions"]
+    total_raise_amount = 0
+
     times_served_weight = 0.1
     ctr_weight = 0.15
+    pay_weight = 0.2
+
+
+
+    for index in range(len(ad_list)):
+        ad = ad_list[index]
+        total_times_served += ad["marketing_info"]["impressions"]
+        raise_percentage = rand(ad["marketing_info"]["raise_percentage"] / 2, ad["marketing_info"]["raise_percentage"], 3)
+        diff = (ad["marketing_info"]["max_cpc"] - request.min_cpc)
+        actual_raise = max(min(ad["marketing_info"]["max_cpc"] - request.min_cpc, request.min_cpc * raise_percentage), rand(diff * 0.2, diff * 0.3, 3))
+        total_raise_amount += actual_raise
+        final_ad_list.append((index, 0, actual_raise))
+
+    
+
+
+
+
     for i in range(len(ad_list)):
         ad = ad_list[i]
         weight_gained = 0
@@ -114,9 +131,11 @@ def negotiate(request : Ad_Request):
             ctr = ad["marketing_info"]["clicks"] / ad["marketing_info"]["impressions"]
         final_weight += ctr * ctr_weight
 
+
+        final_weight += (final_ad_list[i][2] / total_raise_amount) * pay_weight
         
 
-        final_ad_list.append((i, final_weight))
+        final_ad_list[i] = (i, final_weight, final_ad_list[i][2] + request.min_cpc)
 
     final_ad_list.sort(key= lambda x : x[1], reverse= True)
 
