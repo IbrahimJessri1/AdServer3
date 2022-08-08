@@ -1,5 +1,3 @@
-from typing import final
-from fastapi import HTTPException, status
 from repositries import generics as gen
 from models.ssp import Ad_Request
 from models.users import Membership, MembershipProbabilities
@@ -56,7 +54,7 @@ def negotiate_interactive(request : Ad_Request):
 
     times_served_weight = 0.1
     pay_weight = 0.2
-
+    ctr_weight = 0.15
 
 
     for index in range(len(ad_list)):
@@ -77,7 +75,6 @@ def negotiate_interactive(request : Ad_Request):
         ad = ad_list[i]
         weight_gained = 0
         total_weight = 0
-
         if request.user_info is not None:
             if request.user_info.gender is not None:
                 total_weight += 1
@@ -125,6 +122,12 @@ def negotiate_interactive(request : Ad_Request):
             final_weight = weight_gained / total_weight
         if total_times_served != 0:
             final_weight -= (int(ad["marketing_info"]["impressions"]) / total_times_served) * times_served_weight
+
+        ctr = 0
+        if ad["marketing_info"]["impressions"] != 0:
+            ctr = ad["marketing_info"]["clicks"] / ad["marketing_info"]["impressions"]
+        final_weight += ctr * ctr_weight
+
 
         final_weight += (final_ad_list[i][2] / total_raise_amount) * pay_weight
         
@@ -188,7 +191,6 @@ def negotiate(request : Ad_Request):
     total_raise_amount = 0
 
     times_served_weight = 0.1
-    ctr_weight = 0.15
     pay_weight = 0.2
 
 
@@ -259,10 +261,6 @@ def negotiate(request : Ad_Request):
             final_weight = weight_gained / total_weight
         if total_times_served != 0:
             final_weight -= (int(ad["marketing_info"]["impressions"]) / total_times_served) * times_served_weight
-        ctr = 0
-        if ad["marketing_info"]["impressions"] != 0:
-            ctr = ad["marketing_info"]["clicks"] / ad["marketing_info"]["impressions"]
-        final_weight += ctr * ctr_weight
 
 
         final_weight += (final_ad_list[i][2] / total_raise_amount) * pay_weight

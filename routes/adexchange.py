@@ -15,3 +15,8 @@ adexchange_router = APIRouter(
 @adexchange_router.post('/negotiate')
 async def negotiate(request : Ad_Request):
     return repo_adexchange.negotiate(request)
+
+
+@adexchange_router.post('/negotiate_interactive')
+async def negotiate_interactive(request : Ad_Request):
+    return repo_adexchange.negotiate_interactive(request)
