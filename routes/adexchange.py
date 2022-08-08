@@ -24,4 +24,3 @@ async def negotiate_interactive(request : Ad_Request):
 async def request(request : ApplyAd):
     return repo_adexchange.request(request)
 
-

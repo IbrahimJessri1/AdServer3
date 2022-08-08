@@ -3,9 +3,11 @@ from models.ssp import Ad_Request
 from models.users import Membership, MembershipProbabilities
 from models.advertisement import Language, TargetAge
 from .utilites import probability_get, rand
-from config.db import advertisement_collection, interactive_advertisement_collection, user_collection
+from config.db import advertisement_collection, interactive_advertisement_collection, user_collection, served_ad_collection
 from models.ssp import ApplyAd
-import requests
+from uuid import uuid4
+from .utilites import get_dict
+
 
 def negotiate_interactive(request : Ad_Request):
     ad_collection= interactive_advertisement_collection
@@ -278,7 +280,9 @@ def negotiate(request : Ad_Request):
 
 def request(ad_apply : ApplyAd):
     ad = gen.get_one(advertisement_collection, {"id" : ad_apply.ad_id})
-
+    gen.update_one(advertisement_collection, {"id" : ad["id"]}, { "$inc": { "marketing_info.impressions": 1 } })
+    served_ad = {"id": str(uuid4()), "agreed_cpc": ad_apply.cpc, "ad_id": ad["id"]}
+    served_ad_collection.insert_one(dict(served_ad))
     data = {
         "url" : ad["ad_info"]["url"]
     }

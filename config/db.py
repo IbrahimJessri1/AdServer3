@@ -11,7 +11,7 @@ interactive_advertisement_collection = conn.AdServer.interactive_advertisement
 user_collection = conn.AdServer.user
 role_permission_colecction = conn.AdServer.role_permission
 
-
+served_ad_collection = conn.AdServer.served_ad
 
 
 
