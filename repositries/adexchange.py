@@ -54,7 +54,7 @@ def negotiate(request : Ad_Request):
     
     total_times_served = 0
     for ad in ad_list:
-        total_times_served += ad["marketing_info"]["times_served"]
+        total_times_served += ad["marketing_info"]["impressions"]
     times_served_weight = 0.1
     ctr_weight = 0.15
     for i in range(len(ad_list)):
@@ -108,7 +108,7 @@ def negotiate(request : Ad_Request):
         if total_weight != 0:
             final_weight = weight_gained / total_weight
         if total_times_served != 0:
-            final_weight -= (int(ad["marketing_info"]["times_served"]) / total_times_served) * times_served_weight
+            final_weight -= (int(ad["marketing_info"]["impressions"]) / total_times_served) * times_served_weight
         ctr = 0
         if ad["marketing_info"]["impressions"] != 0:
             ctr = ad["marketing_info"]["clicks"] / ad["marketing_info"]["impressions"]

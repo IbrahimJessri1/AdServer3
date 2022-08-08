@@ -37,7 +37,6 @@ class MarketingInfo(BaseModel):
     max_cpc : float
     impressions : int
     clicks: int
-    times_served: int
     raise_percentage: float
 
 class AdType(str, Enum):
