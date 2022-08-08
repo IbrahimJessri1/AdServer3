@@ -6,13 +6,18 @@ from repositries import generics as gen
 conn = MongoClient("mongodb://localhost:27017/AdServer")
 
 
-collection = conn.AdServer.advertisement
+advertisement_collection = conn.AdServer.advertisement
+interactive_advertisement_collection = conn.AdServer.interactive_advertisement
+user_collection = conn.AdServer.user
+role_permission_colecction = conn.AdServer.role_permission
+
+
+
+
+
 
 #gen.update_many(collection, {}, {"$set" : {"marketing_info.times_served" : 0} })
 
-
-
-all_ads = gen.get_many(collection,{"marketing_info.max_cpc" : {"$gte" : 1.2}})
 
 
 #print(all_ads[0]["marketing_info"]["max_cpc"])

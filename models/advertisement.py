@@ -36,14 +36,12 @@ class TargetUserInfo(BaseModel):
 class MarketingInfo(BaseModel):
     max_cpc : float
     impressions : int
-    clicks: int
     raise_percentage: float
 
 class AdType(str, Enum):
     TEXT= "text"
-    PHOTO= "image"
+    IMAGE= "image"
     VIDEO= "video"
-    INTERACTIVE= "interactive"
 
 
 class AdInfo(BaseModel):
@@ -71,4 +69,37 @@ class Advertisement(BaseModel):
     target_user_info: TargetUserInfo
     marketing_info: MarketingInfo
     ad_info: AdInfo
+    categories: List[Category]
+
+
+
+
+class InteractiveAdvertisementInput(BaseModel):
+    target_user_info: TargetUserInfo
+    max_cpc: float
+    type: AdType
+    categories: List[Category]
+    url:str
+    redirect_url:str
+    raise_percentage: float
+
+
+class InteractiveMarketingInfo(BaseModel):
+    max_cpc : float
+    impressions : int
+    clicks: int
+    raise_percentage: float
+
+class InteractiveAdInfo(BaseModel):
+    type : AdType
+    advertiser_username: str
+    url: str
+    redirect_url : str
+
+class InteractiveAdvertisement(BaseModel):
+    id:Optional[UUID] = uuid4()
+    create_date: str
+    target_user_info: TargetUserInfo
+    marketing_info: MarketingInfo
+    ad_info: InteractiveAdInfo
     categories: List[Category]

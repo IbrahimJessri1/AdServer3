@@ -3,9 +3,9 @@ import shutil
 from tempfile import gettempdir
 from uuid import uuid4
 from fastapi import HTTPException, status
-from config.db import conn
+from config.db import advertisement_collection, interactive_advertisement_collection
 from repositries import generics as gen
-from models.advertisement import AdInfo, Advertisement, MarketingInfo
+from models.advertisement import AdInfo, Advertisement, MarketingInfo, InteractiveAdInfo, InteractiveAdvertisement, InteractiveMarketingInfo, AdType
 import datetime
 from .utilites import get_dict
 import requests
@@ -20,38 +20,60 @@ def create_ad(ad_input, advertiser_username):
         advertisement = Advertisement(
             create_date = create_date,
             target_user_info=ad_input.target_user_info, 
-            marketing_info=MarketingInfo(max_cpc= ad_input.max_cpc,impressions= 0,clicks= 0, raise_percentage=ad_input.raise_percentage),
+            marketing_info=MarketingInfo(max_cpc= ad_input.max_cpc,impressions= 0, raise_percentage=ad_input.raise_percentage),
             ad_info= ad_info,
             categories=ad_input.categories
         )
-        if ad_input.type.value == 'text':
-            filename = str(advertisement.id) + '.txt'
-            dir = 'advertisements/' + advertiser_username
-            download_file(advertisement.ad_info.url, dir, filename)
-        if ad_input.type.value == 'image':
-            filename = str(advertisement.id) + '.jpg'
-            dir = 'advertisements/' + advertiser_username
-            download_file(advertisement.ad_info.url, dir, filename)
-        if ad_input.type.value == 'video':
-            filename = str(advertisement.id) + '.mp4'
-            dir = 'advertisements/' + advertiser_username
-            download_file(advertisement.ad_info.url, dir, filename)
+        filenames = [(AdType.TEXT, '.txt'), (AdType.IMAGE, '.jpg'), (AdType.VIDEO, '.mp4')]
+        dir = 'advertisements/' + advertiser_username
+        filename = str(advertisement.id)
+        for x in filenames:
+            if x[0] == ad_input.type:
+                filename += x[1]
+                break
+        download_file(advertisement.ad_info.url, dir, filename)
         d = get_dict(advertisement)
-        conn.AdServer.advertisement.insert_one(dict(d))
+        advertisement_collection.insert_one(dict(d))
+    except:
+        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, detail='An error happened, try again later')
+
+
+
+def create_interactive_ad(ad_input, advertiser_username):
+    try:
+        create_date = str(datetime.datetime.now())
+        ad_info = InteractiveAdInfo(type = ad_input.type, advertiser_username=advertiser_username, url=ad_input.url, redirect_url= ad_input.redirect_url)
+        advertisement = InteractiveAdvertisement(
+            create_date = create_date,
+            target_user_info=ad_input.target_user_info, 
+            marketing_info=InteractiveMarketingInfo(max_cpc= ad_input.max_cpc,impressions= 0, clicks=0, raise_percentage=ad_input.raise_percentage),
+            ad_info= ad_info,
+            categories=ad_input.categories
+        )
+        filenames = [(AdType.TEXT, '.txt'), (AdType.IMAGE, '.jpg'), (AdType.VIDEO, '.mp4')]
+        dir = 'advertisements/' + advertiser_username
+        filename = str(advertisement.id)
+        for x in filenames:
+            if x[0] == ad_input.type:
+                filename += x[1]
+                break
+        download_file(advertisement.ad_info.url, dir, filename)
+        d = get_dict(advertisement)
+        interactive_advertisement_collection.insert_one(dict(d))
     except:
         raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, detail='An error happened, try again later')
 
 
 ##admin uses
 def get_all():
-    return gen.get_many(conn.AdServer.advertisement, {})
+    return gen.get_many(advertisement_collection, {})
 
 def get_my_ads(username):
-    return gen.get_many(conn.AdServer.advertisement, {"ad_info.advertiser_username" : username})
+    return gen.get_many(advertisement_collection, {"ad_info.advertiser_username" : username})
 
 
 def remove(constraints):
-    gen.remove(conn.AdServer.advertisement, constraints)
+    gen.remove(advertisement_collection, constraints)
     
 
 

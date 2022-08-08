@@ -1,15 +1,15 @@
-from config.db import conn
+from config.db import user_collection
 from models.users import UserShow
 from repositries import generics as gen
 from .hashing import Hash
 from fastapi import HTTPException, status
 
 def get_all():
-    return gen.get_many(conn.AdServer.user, {})
+    return gen.get_many(user_collection, {})
 
 
 def remove(constraints):
-    gen.remove(conn.AdServer.user, constraints)
+    gen.remove(user_collection, constraints)
 
 
 
@@ -21,7 +21,7 @@ def update_account(user_update, username):
         in_values = {}
         in_values["password"] = Hash.bcrypt(user_update.password)
         new_values = { "$set": in_values }
-        res = gen.update_one(conn.AdServer.user, query, new_values)
+        res = gen.update_one(user_collection, query, new_values)
         return UserShow(username=res["username"], role=res["role"], create_date=res["create_date"])
     except HTTPException as http_excep:
         raise http_excep    
@@ -30,13 +30,13 @@ def update_account(user_update, username):
 
 
 def delete_account(username):
-    gen.remove(conn.AdServer.user, {"username" : username})
+    gen.remove(user_collection, {"username" : username})
 
 
 
 def get(username):
     try:
-        res = gen.get_one(conn.AdServer.user, {"username" : username})
+        res = gen.get_one(user_collection, {"username" : username})
         return UserShow(username=res["username"], role=res["role"], create_date=res["create_date"])
     except HTTPException as http_excep:
         raise http_excep    

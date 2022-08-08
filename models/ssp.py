@@ -3,6 +3,8 @@ from pydantic import BaseModel
 from enum import Enum
 from typing import Optional, List
 
+from models.advertisement import AdType
+
 
 class Gender(str, Enum):
     MALE= "male"
@@ -34,3 +36,4 @@ class Ad_Request(BaseModel):
     min_cpc: float
     user_info: Optional[UserInfo] = None
     categories: Optional[Categories] = None
+    type: AdType
