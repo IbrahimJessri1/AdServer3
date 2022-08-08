@@ -32,8 +32,15 @@ class Categories(BaseModel):
     categories_list: List[Category]
 
 
+
 class Ad_Request(BaseModel):
     min_cpc: float
     user_info: Optional[UserInfo] = None
     categories: Optional[Categories] = None
     type: AdType
+
+
+
+class ApplyAd(BaseModel):
+    cpc: float
+    ad_id: str

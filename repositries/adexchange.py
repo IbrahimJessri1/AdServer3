@@ -3,8 +3,9 @@ from models.ssp import Ad_Request
 from models.users import Membership, MembershipProbabilities
 from models.advertisement import Language, TargetAge
 from .utilites import probability_get, rand
-
 from config.db import advertisement_collection, interactive_advertisement_collection, user_collection
+from models.ssp import ApplyAd
+import requests
 
 def negotiate_interactive(request : Ad_Request):
     ad_collection= interactive_advertisement_collection
@@ -175,7 +176,7 @@ def negotiate(request : Ad_Request):
 
 
     if len(param) == 0:
-        return {"cpc" : 0, "id" : '-1'}
+        return {"cpc" : 0, "ad_id" : '-1'}
     ad_membership = probability_get(param)
     ad_list = []
     if ad_membership == Membership.NORMAL.value:
@@ -202,7 +203,7 @@ def negotiate(request : Ad_Request):
         diff = (ad["marketing_info"]["max_cpc"] - request.min_cpc)
         actual_raise = max(min(ad["marketing_info"]["max_cpc"] - request.min_cpc, request.min_cpc * raise_percentage), rand(diff * 0.2, diff * 0.3, 3))
         total_raise_amount += actual_raise
-        final_ad_list.append((index, 0, actual_raise))
+        final_ad_list.append([index, 0, actual_raise])
 
     
 
@@ -266,10 +267,19 @@ def negotiate(request : Ad_Request):
         final_weight += (final_ad_list[i][2] / total_raise_amount) * pay_weight
         
 
-        final_ad_list[i] = (i, final_weight, final_ad_list[i][2] + request.min_cpc)
+        final_ad_list[i] = [i, final_weight, final_ad_list[i][2] + request.min_cpc]
 
     final_ad_list.sort(key= lambda x : x[1], reverse= True)
-
-
-    return final_ad_list
+    winner_ad = ad_list[final_ad_list[0][0]]
+    return {"cpc": final_ad_list[0][2], "ad_id": winner_ad["id"]}
     
+
+
+
+def request(ad_apply : ApplyAd):
+    ad = gen.get_one(advertisement_collection, {"id" : ad_apply.ad_id})
+
+    data = {
+        "url" : ad["ad_info"]["url"]
+    }
+    return data
