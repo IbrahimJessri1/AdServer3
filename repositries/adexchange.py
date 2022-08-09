@@ -1,12 +1,17 @@
 from repositries import generics as gen
-from models.ssp import Ad_Request
+from models.ssp import Ad_Request, UserInfo
 from models.users import Membership, MembershipProbabilities
 from models.advertisement import Language, TargetAge
 from .utilites import probability_get, rand
 from config.db import advertisement_collection, interactive_advertisement_collection, user_collection, served_ad_collection
 from models.ssp import ApplyAd
 from uuid import uuid4
-from .utilites import get_dict
+from .utilites import get_weight_user_info
+
+times_served_weight = 0.1
+pay_weight = 0.2
+ctr_weight = 0.15
+cat_weight = 1.5
 
 
 def negotiate_interactive(request : Ad_Request):
@@ -55,9 +60,6 @@ def negotiate_interactive(request : Ad_Request):
     total_times_served = 0
     total_raise_amount = 0
 
-    times_served_weight = 0.1
-    pay_weight = 0.2
-    ctr_weight = 0.15
 
 
     for index in range(len(ad_list)):
@@ -76,44 +78,10 @@ def negotiate_interactive(request : Ad_Request):
 
     for i in range(len(ad_list)):
         ad = ad_list[i]
-        weight_gained = 0
-        total_weight = 0
-        if request.user_info is not None:
-            if request.user_info.gender is not None:
-                total_weight += 1
-                if request.user_info.gender.value == ad["target_user_info"]["gender"]:
-                    weight_gained += 1
-                elif 'both'== ad["target_user_info"]["gender"]:
-                    weight_gained += 0.5
+        res = get_weight_user_info(request.user_info, ad)
+        weight_gained = res[0]
+        total_weight = res[1]
 
-            if request.user_info.age is not None:
-                total_weight += 1
-                if ad["target_user_info"]["age"] == TargetAge.ALL_AGES:
-                    weight_gained += 0.5
-                elif request.user_info.age <= 12:
-                    if ad["target_user_info"]["age"] == TargetAge.KID:
-                        weight_gained += 1
-                elif request.user_info.age <= 39:
-                    if ad["target_user_info"]["age"] == TargetAge.YOUTH:
-                        weight_gained += 1
-                elif request.user_info.age <= 55:
-                    if ad["target_user_info"]["age"] == TargetAge.ADULT:
-                        weight_gained += 1
-                elif request.user_info.age > 55:
-                    if ad["target_user_info"]["age"] == TargetAge.OLD:
-                        weight_gained += 1
-            if request.user_info.language is not None:
-                total_weight += 1
-                if ad["target_user_info"]["language"] == Language.ANY:
-                    weight_gained += 0.5
-                elif ad["target_user_info"]["language"] == request.user_info.language:
-                    weight_gained += 1
-            if request.user_info.location is not None:
-                total_weight += 2
-                if ad["target_user_info"]["location"].lower() == request.user_info.location.lower():
-                    weight_gained += 2
-                else:
-                    weight_gained += 1
         if request.categories is not None:
             for cat in request.categories.categories_list:
                 total_weight += 1.5
@@ -193,11 +161,6 @@ def negotiate(request : Ad_Request):
     total_times_served = 0
     total_raise_amount = 0
 
-    times_served_weight = 0.1
-    pay_weight = 0.2
-
-
-
     for index in range(len(ad_list)):
         ad = ad_list[index]
         total_times_served += ad["marketing_info"]["impressions"]
@@ -207,64 +170,23 @@ def negotiate(request : Ad_Request):
         total_raise_amount += actual_raise
         final_ad_list.append([index, 0, actual_raise])
 
-    
-
-
-
-
     for i in range(len(ad_list)):
         ad = ad_list[i]
-        weight_gained = 0
-        total_weight = 0
-
-        if request.user_info is not None:
-            if request.user_info.gender is not None:
-                total_weight += 1
-                if request.user_info.gender.value == ad["target_user_info"]["gender"]:
-                    weight_gained += 1
-                elif 'both'== ad["target_user_info"]["gender"]:
-                    weight_gained += 0.5
-
-            if request.user_info.age is not None:
-                total_weight += 1
-                if ad["target_user_info"]["age"] == TargetAge.ALL_AGES:
-                    weight_gained += 0.5
-                elif request.user_info.age <= 12:
-                    if ad["target_user_info"]["age"] == TargetAge.KID:
-                        weight_gained += 1
-                elif request.user_info.age <= 39:
-                    if ad["target_user_info"]["age"] == TargetAge.YOUTH:
-                        weight_gained += 1
-                elif request.user_info.age <= 55:
-                    if ad["target_user_info"]["age"] == TargetAge.ADULT:
-                        weight_gained += 1
-                elif request.user_info.age > 55:
-                    if ad["target_user_info"]["age"] == TargetAge.OLD:
-                        weight_gained += 1
-            if request.user_info.language is not None:
-                total_weight += 1
-                if ad["target_user_info"]["language"] == Language.ANY:
-                    weight_gained += 0.5
-                elif ad["target_user_info"]["language"] == request.user_info.language:
-                    weight_gained += 1
-            if request.user_info.location is not None:
-                total_weight += 2
-                if ad["target_user_info"]["location"].lower() == request.user_info.location.lower():
-                    weight_gained += 2
-                else:
-                    weight_gained += 1
+        res = get_weight_user_info(request.user_info, ad)
+        weight_gained = res[0]
+        total_weight = res[1]
+        
         if request.categories is not None:
             for cat in request.categories.categories_list:
-                total_weight += 1.5
+                total_weight += cat_weight
                 if cat in ad["categories"]:
-                    weight_gained += 1.5
+                    weight_gained += cat_weight
 
         final_weight = 0
         if total_weight != 0:
             final_weight = weight_gained / total_weight
         if total_times_served != 0:
             final_weight -= (int(ad["marketing_info"]["impressions"]) / total_times_served) * times_served_weight
-
 
         final_weight += (final_ad_list[i][2] / total_raise_amount) * pay_weight
         

@@ -62,6 +62,7 @@ class AdvertisementInput(BaseModel):
     categories: List[Category]
     url:str
     raise_percentage: float
+    keywords: Optional[List[str]] = None
 
 class Advertisement(BaseModel):
     id:Optional[UUID] = uuid4()
@@ -70,7 +71,7 @@ class Advertisement(BaseModel):
     marketing_info: MarketingInfo
     ad_info: AdInfo
     categories: List[Category]
-
+    keywords: Optional[List[str]] = None
 
 
 
@@ -82,6 +83,8 @@ class InteractiveAdvertisementInput(BaseModel):
     url:str
     redirect_url:str
     raise_percentage: float
+    keywords: Optional[List[str]] = None
+
 
 
 class InteractiveMarketingInfo(BaseModel):
@@ -103,3 +106,4 @@ class InteractiveAdvertisement(BaseModel):
     marketing_info: MarketingInfo
     ad_info: InteractiveAdInfo
     categories: List[Category]
+    keywords: Optional[List[str]] = None
