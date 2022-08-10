@@ -6,6 +6,34 @@ from typing import List, Optional
 from fastapi import UploadFile
 
 
+class Category(str, Enum):
+    ANY= "any"
+    PLACES= "places"
+    Technology= "technology"
+    HEALTHCARE = "healthcare"
+    APPS= "apps"
+    TOYS=  "toys"
+    GAMING= "gaming"
+    EDUCATION = "education"
+    VEHICLES= "vehicles"
+    NATURE= "nature"
+    FOOD= "food"
+    SMARTPHONE= "smartphone"
+    CARS= "cars"
+    PRODUCTS= "products"
+    WEBSITES= "websites"
+    BIKES= "bikes"
+    SCHOOL= "school"
+    BOOKS= "books"
+    ELECTRONICS= "electronics"
+    HOUSE= "house"
+    FURNITURE= "furniture"
+    FAMILY= "family"
+    CLOTHES= "clothes"
+    WEARBLE= "wearable"
+    ANIMALS= "animals"
+
+
 class TargetAge(str, Enum):
     ALL_AGES= "all ages"
     KID= "kids"
@@ -28,7 +56,7 @@ class TargetGender(str, Enum):
 class TargetUserInfo(BaseModel):
     location:str
     gender:TargetGender
-    age: TargetAge
+    age: List[TargetAge]
     language: Language
 
 
@@ -48,10 +76,7 @@ class AdInfo(BaseModel):
     type : AdType
     advertiser_username: str
     url: str
-
-class Category(str, Enum):
-    ANY= "any"
-    TECHNOLOGY= "technology"
+    text: str
 
 
 
@@ -63,6 +88,7 @@ class AdvertisementInput(BaseModel):
     url:str
     raise_percentage: float
     keywords: Optional[List[str]] = None
+    text: str
 
 class Advertisement(BaseModel):
     id:Optional[UUID] = uuid4()
@@ -84,7 +110,7 @@ class InteractiveAdvertisementInput(BaseModel):
     redirect_url:str
     raise_percentage: float
     keywords: Optional[List[str]] = None
-
+    text: str
 
 
 class InteractiveMarketingInfo(BaseModel):
@@ -98,12 +124,16 @@ class InteractiveAdInfo(BaseModel):
     advertiser_username: str
     url: str
     redirect_url : str
+    text: str
 
 class InteractiveAdvertisement(BaseModel):
     id:Optional[UUID] = uuid4()
     create_date: str
     target_user_info: TargetUserInfo
-    marketing_info: MarketingInfo
+    marketing_info: InteractiveMarketingInfo
     ad_info: InteractiveAdInfo
     categories: List[Category]
     keywords: Optional[List[str]] = None
+
+
+
