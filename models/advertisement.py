@@ -1,4 +1,3 @@
-from sre_parse import CATEGORIES
 from uuid import UUID, uuid4
 from pydantic import UUID4, BaseModel
 from enum import Enum
@@ -34,6 +33,12 @@ class Category(str, Enum):
     ANIMALS= "animals"
 
 
+
+class Language(str, Enum):
+    ANY = "any"
+    EN = "en"
+    AR = "ar"
+
 class TargetAge(str, Enum):
     ALL_AGES= "all ages"
     KID= "kids"
@@ -41,17 +46,10 @@ class TargetAge(str, Enum):
     ADULT = "adults"
     OLD = "old people"
 
-class Language(str, Enum):
-    ANY = "any"
-    EN = "en"
-    AR = "ar"
-
-
 class TargetGender(str, Enum):
     BOTH="both"
     MALE= "male"
     FEMALE= "female"
-
 
 class TargetUserInfo(BaseModel):
     location:str
@@ -59,18 +57,10 @@ class TargetUserInfo(BaseModel):
     age: List[TargetAge]
     language: Language
 
-
-
-class MarketingInfo(BaseModel):
-    max_cpc : float
-    impressions : int
-    raise_percentage: float
-
 class AdType(str, Enum):
     TEXT= "text"
     IMAGE= "image"
     VIDEO= "video"
-
 
 class AdInfo(BaseModel):
     type : AdType
@@ -78,6 +68,24 @@ class AdInfo(BaseModel):
     url: str
     text: str
 
+class InteractiveAdInfo(BaseModel):
+    type : AdType
+    advertiser_username: str
+    url: str
+    redirect_url : str
+    text: str
+
+class MarketingInfo(BaseModel):
+    max_cpc : float
+    impressions : int
+    raise_percentage: float
+
+
+class InteractiveMarketingInfo(BaseModel):
+    max_cpc : float
+    impressions : int
+    clicks: int
+    raise_percentage: float
 
 
 class AdvertisementInput(BaseModel):
@@ -90,17 +98,6 @@ class AdvertisementInput(BaseModel):
     keywords: Optional[List[str]] = None
     text: str
 
-class Advertisement(BaseModel):
-    id:Optional[UUID] = uuid4()
-    create_date: str
-    target_user_info: TargetUserInfo
-    marketing_info: MarketingInfo
-    ad_info: AdInfo
-    categories: List[Category]
-    keywords: Optional[List[str]] = None
-
-
-
 class InteractiveAdvertisementInput(BaseModel):
     target_user_info: TargetUserInfo
     max_cpc: float
@@ -112,19 +109,14 @@ class InteractiveAdvertisementInput(BaseModel):
     keywords: Optional[List[str]] = None
     text: str
 
-
-class InteractiveMarketingInfo(BaseModel):
-    max_cpc : float
-    impressions : int
-    clicks: int
-    raise_percentage: float
-
-class InteractiveAdInfo(BaseModel):
-    type : AdType
-    advertiser_username: str
-    url: str
-    redirect_url : str
-    text: str
+class Advertisement(BaseModel):
+    id:Optional[UUID] = uuid4()
+    create_date: str
+    target_user_info: TargetUserInfo
+    marketing_info: MarketingInfo
+    ad_info: AdInfo
+    categories: List[Category]
+    keywords: Optional[List[str]] = None
 
 class InteractiveAdvertisement(BaseModel):
     id:Optional[UUID] = uuid4()
