@@ -67,20 +67,27 @@ def get_weight_user_info(user_info : UserInfo, ad):
 
             if user_info.age is not None:
                 total_weight += age_weight
-                if ad["target_user_info"]["age"] == TargetAge.ALL_AGES:
-                    weight_gained += age_weight/2
-                elif user_info.age <= 12:
-                    if ad["target_user_info"]["age"] == TargetAge.KID:
-                        weight_gained += age_weight
-                elif user_info.age <= 39:
-                    if ad["target_user_info"]["age"] == TargetAge.YOUTH:
-                        weight_gained += age_weight
-                elif user_info.age <= 55:
-                    if ad["target_user_info"]["age"] == TargetAge.ADULT:
-                        weight_gained += age_weight
-                elif user_info.age > 55:
-                    if ad["target_user_info"]["age"] == TargetAge.OLD:
-                        weight_gained += age_weight
+                for age in ad["target_user_info"]["age"]:
+                    if age == TargetAge.ALL_AGES:
+                        weight_gained += age_weight/2
+                        break
+                    elif user_info.age <= 12:
+                        if age == TargetAge.KID:
+                            weight_gained += age_weight
+                            break
+                    elif user_info.age <= 39:
+                        if age == TargetAge.YOUTH:
+                            weight_gained += age_weight
+                            break
+                    elif user_info.age <= 55:
+                        if age == TargetAge.ADULT:
+                            weight_gained += age_weight
+                            break
+                    elif user_info.age > 55:
+                        if age == TargetAge.OLD:
+                            weight_gained += age_weight
+                            break
+            
             if user_info.language is not None:
                 total_weight += language_weight
                 if ad["target_user_info"]["language"] == Language.ANY:

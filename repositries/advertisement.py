@@ -16,8 +16,10 @@ import os
 def create_ad(ad_input, advertiser_username):
     try:
         create_date = str(datetime.datetime.now())
-        ad_info = AdInfo(type = ad_input.type, advertiser_username=advertiser_username, url=ad_input.url)
+        ad_info = AdInfo(type = ad_input.type, advertiser_username=advertiser_username, url=ad_input.url, text=ad_input.text)
+        id = str(uuid4())
         advertisement = Advertisement(
+            id= id,
             create_date = create_date,
             target_user_info=ad_input.target_user_info, 
             marketing_info=MarketingInfo(max_cpc= ad_input.max_cpc,impressions= 0, raise_percentage=ad_input.raise_percentage),
@@ -34,6 +36,7 @@ def create_ad(ad_input, advertiser_username):
         download_file(advertisement.ad_info.url, dir, filename)
         d = get_dict(advertisement)
         advertisement_collection.insert_one(dict(d))
+        return id
     except:
         raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, detail='An error happened, try again later')
 

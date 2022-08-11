@@ -17,10 +17,13 @@ async def negotiate(request : Ad_Request):
 
 @adexchange_router.post('/negotiate_interactive')
 async def negotiate_interactive(request : Ad_Request):
-    return repo_adexchange.negotiate_interactive(request)
+    return repo_adexchange.negotiate(request, 1)
 
 
 @adexchange_router.post('/request')
 async def request(request : ApplyAd):
     return repo_adexchange.request(request)
 
+@adexchange_router.post('/request_interactive')
+async def request(request : ApplyAd):
+    return repo_adexchange.request(request, 1)

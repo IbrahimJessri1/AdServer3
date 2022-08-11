@@ -38,7 +38,7 @@ class Ad_Request(BaseModel):
     user_info: Optional[UserInfo] = None
     categories: Optional[Categories] = None
     type: AdType
-    
+    keywords: Optional[List[str]] = None
 
 
 class ApplyAd(BaseModel):
