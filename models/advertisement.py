@@ -87,7 +87,6 @@ class InteractiveMarketingInfo(BaseModel):
     clicks: int
     raise_percentage: float
 
-
 class AdvertisementInput(BaseModel):
     target_user_info: TargetUserInfo
     max_cpc: float
