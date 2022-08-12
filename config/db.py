@@ -3,17 +3,15 @@ from pymongo import MongoClient
 from repositries import generics as gen
 
 
-conn = MongoClient("mongodb://localhost:27017/AdServer")
+conn = MongoClient("mongodb://localhost:27017/AdServer3")
 
 
-advertisement_collection = conn.AdServer.advertisement
-interactive_advertisement_collection = conn.AdServer.interactive_advertisement
-user_collection = conn.AdServer.user
-role_permission_collection = conn.AdServer.role_permission
+advertisement_collection = conn.AdServer3.advertisement
+interactive_advertisement_collection = conn.AdServer3.interactive_advertisement
+user_collection = conn.AdServer3.user
+role_permission_collection = conn.AdServer3.role_permission
 
-served_ad_collection = conn.AdServer.served_ad
-
-
+served_ad_collection = conn.AdServer3.served_ad
 
 
 #gen.update_many(collection, {}, {"$set" : {"marketing_info.times_served" : 0} })
